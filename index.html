@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Plano ATPL">
+<meta name="theme-color" content="#EEF1F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0F1622" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<title>Plano ATPL</title>
+<style>
+:root{
+  --ground:#EEF1F5; --surface:#FFFFFF; --surface-2:#F5F7FA; --ink:#15223A; --muted:#5C6A7E; --line:#D6DDE6;
+  --accent:#1D5FD1; --accent-soft:#E3ECFC; --danger:#C3303B; --danger-soft:#FBE4E6; --ok:#23845A; --ok-soft:#DDF2E7;
+  --warn:#B7791F; --warn-soft:#FFF3D6; --joker:#6B3FA0; --joker-soft:#EFE7F8; --dispensa:#E6F1E9; --feriado:#ECE8F4;
+  --c-HPL:#7A4FB5; --c-POF:#C2410C; --c-COM:#2D62B5; --c-AL:#B7791F; --c-MB:#127C83; --c-sch:#6B778A;
+  --shadow:0 1px 2px rgba(21,34,58,.06),0 2px 8px rgba(21,34,58,.05);
+  --sans:-apple-system,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --ground:#0F1622; --surface:#172131; --surface-2:#1C2839; --ink:#E7EDF4; --muted:#9BA8B8; --line:#2A394D;
+  --accent:#6C9CF0; --accent-soft:#1B2A45; --danger:#F06B74; --danger-soft:#3A1C22; --ok:#4CC38A; --ok-soft:#163327;
+  --warn:#E3A84A; --warn-soft:#3A2E14; --joker:#B792E6; --joker-soft:#2A2140; --dispensa:#18302A; --feriado:#262238;
+  --c-HPL:#A987DB; --c-POF:#F08A5D; --c-COM:#6E9CE8; --c-AL:#E3A84A; --c-MB:#3FB6BD; --c-sch:#9BA8B8; --shadow:0 1px 2px rgba(0,0,0,.3);
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ground:#0F1622; --surface:#172131; --surface-2:#1C2839; --ink:#E7EDF4; --muted:#9BA8B8; --line:#2A394D;
+  --accent:#6C9CF0; --accent-soft:#1B2A45; --danger:#F06B74; --danger-soft:#3A1C22; --ok:#4CC38A; --ok-soft:#163327;
+  --warn:#E3A84A; --warn-soft:#3A2E14; --joker:#B792E6; --joker-soft:#2A2140; --dispensa:#18302A; --feriado:#262238;
+  --c-HPL:#A987DB; --c-POF:#F08A5D; --c-COM:#6E9CE8; --c-AL:#E3A84A; --c-MB:#3FB6BD; --c-sch:#9BA8B8; --shadow:0 1px 2px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.45;padding-top:env(safe-area-inset-top,0px);-webkit-tap-highlight-color:transparent}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:14px 110px;display:grid;gap:14px}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:28px;line-height:1.1}
+h2{font-size:19px}
+.eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:grid;gap:10px;box-shadow:var(--shadow)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;gap:1px}
+.tile .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
+.tile .v{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.tile .s{font-size:11.5px;color:var(--muted)}
+.subj{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;color:#fff;vertical-align:1px}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface-2)}
+.pill.ok{color:var(--ok);background:var(--ok-soft);border-color:var(--ok)}
+.pill.bad{color:var(--danger);background:var(--danger-soft);border-color:var(--danger)}
+.pill.warn{color:var(--warn);background:var(--warn-soft);border-color:var(--warn)}
+.pill.joker{color:var(--joker);background:var(--joker-soft);border-color:var(--joker)}
+/* blocks */
+.block{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:start;padding:8px 0;border-top:1px solid var(--line)}
+.block:first-child{border-top:0}
+.block .t{font-size:14.5px;overflow-wrap:anywhere}
+.block .t small{display:block;color:var(--muted);font-size:12.5px}
+.block .h{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.block.done .t{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--ok)}
+.block.j{background:var(--joker-soft);border-radius:8px;padding:8px;border-top:0;margin-top:4px}
+.check{appearance:none;-webkit-appearance:none;width:22px;height:22px;margin:0;border:2px solid var(--muted);border-radius:6px;background:var(--surface);cursor:pointer;display:grid;place-content:center}
+.check:checked{background:var(--ok);border-color:var(--ok)}
+.check:checked::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg) translate(-1px,-1px)}
+/* form */
+form.log{display:grid;gap:10px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{font:600 13px var(--sans);border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:8px;padding:7px 10px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.fields{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+label.f{display:grid;gap:3px;font-size:12px;color:var(--muted)}
+label.f input{font:600 18px var(--sans);font-variant-numeric:tabular-nums;width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);color:var(--ink)}
+.primary{font:700 15px var(--sans);border:0;border-radius:10px;padding:12px;background:var(--accent);color:#fff;cursor:pointer}
+.ghost{font:600 13px var(--sans);border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--surface-2);color:var(--ink);cursor:pointer}
+.msg{font-size:13px;color:var(--muted);min-height:1.2em}
+/* progress */
+.subjrow{display:grid;gap:6px;padding:10px 0;border-top:1px solid var(--line)}
+.subjrow:first-child{border-top:0}
+.subjrow .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline;flex-wrap:wrap}
+.track{position:relative;height:10px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.track .fill{position:absolute;inset:0 auto 0 0;border-radius:5px}
+.track .mark{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--ink);opacity:.55}
+.stats{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.stats b{color:var(--ink)}
+.crit{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.crit li{display:grid;grid-template-columns:22px 1fr;gap:6px;font-size:13.5px}
+.crit li::before{content:attr(data-i);font-weight:700}
+.crit li.y::before{content:"✓";color:var(--ok)}
+.crit li.n::before{content:"✗";color:var(--danger)}
+.verdict{font-size:20px;font-weight:800}
+/* plan list */
+.day{display:grid;grid-template-columns:64px 1fr;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
+.day .d{padding:10px 8px;background:var(--surface-2);border-right:1px dashed var(--line);display:grid;align-content:start;gap:2px}
+.day .d b{font-size:17px}.day .d span{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.day .b{padding:8px 12px;display:grid;gap:2px;min-width:0}
+.day .cls{font-size:12.5px;color:var(--muted)}
+.day.t-teste,.day.t-exame{border-color:var(--danger)}
+.day.t-teste .d,.day.t-exame .d{background:var(--danger-soft)}
+.day.t-exame .cls,.day.t-teste .cls{color:var(--danger);font-weight:600}
+.day.t-dispensa .d{background:var(--dispensa)}
+.day.t-feriado .d{background:var(--feriado)}
+.day.t-al .d{background:var(--warn-soft)}
+.day.today{outline:2px solid var(--accent);outline-offset:1px}
+.week-h{display:flex;flex-wrap:wrap;gap:2px 10px;align-items:baseline;padding-top:8px}
+.week-h span{font-size:13px;color:var(--muted)}
+/* tabbar */
+nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:10;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav.tabs button{font:600 12px var(--sans);background:none;border:0;color:var(--muted);padding:10px 4px 12px;display:grid;justify-items:center;gap:3px;cursor:pointer}
+nav.tabs button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8}
+nav.tabs button[aria-selected="true"]{color:var(--accent)}
+.logitem{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);font-size:13.5px}
+.logitem:first-child{border-top:0}
+textarea{width:100%;min-height:70px;font:12px var(--mono);border:1px solid var(--line);border-radius:8px;padding:8px;background:var(--surface-2);color:var(--ink)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:420px){.tiles{grid-template-columns:repeat(3,1fr)}.tile .v{font-size:19px}.fields{gap:6px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header style="display:grid;gap:4px">
+    <div class="eyebrow" id="today-label">ATPL · 1.ª fase</div>
+    <h1>Plano ATPL</h1>
+  </header>
+
+  <section id="tab-hoje" class="tab" style="display:grid;gap:14px">
+    <div class="tiles" id="countdown"></div>
+    <div class="card" id="joker-mini"></div>
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h2 id="today-title">Hoje</h2><span class="pill" id="today-hours"></span></div>
+      <div id="today-blocks"></div>
+    </div>
+    <div class="card">
+      <h2>Registar sessão</h2>
+      <form class="log" id="logform">
+        <div class="seg" id="seg-subj" role="group" aria-label="Cadeira"></div>
+        <div class="seg" id="seg-kind" role="group" aria-label="Tipo">
+          <button type="button" data-k="new" aria-pressed="true">Perguntas novas</button>
+          <button type="button" data-k="rev" aria-pressed="false">Revisão / simulação</button>
+        </div>
+        <div class="fields">
+          <label class="f">Perguntas<input id="f-n" inputmode="numeric" pattern="[0-9]*" placeholder="100"></label>
+          <label class="f">Certas<input id="f-c" inputmode="numeric" pattern="[0-9]*" placeholder="82"></label>
+          <label class="f">Minutos<input id="f-m" inputmode="numeric" pattern="[0-9]*" placeholder="90"></label>
+        </div>
+        <button class="primary" type="submit">Guardar sessão</button>
+        <div class="msg" id="logmsg"></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="tab-progresso" class="tab" hidden style="display:grid;gap:14px">
+    <div class="card" id="joker-full"></div>
+    <div class="card"><h2>Por cadeira</h2><div id="subjects"></div>
+      <p class="msg" style="margin:0">A barra mostra as perguntas novas feitas; o traço vertical é onde devias estar hoje segundo o plano.</p></div>
+  </section>
+
+  <section id="tab-plano" class="tab" hidden style="display:grid;gap:10px">
+    <div class="row" style="justify-content:space-between"><h2>Plano dia a dia</h2><button class="ghost" id="gotoday" type="button">Ir para hoje</button></div>
+    <div id="plan" style="display:grid;gap:8px"></div>
+  </section>
+
+  <section id="tab-registo" class="tab" hidden style="display:grid;gap:14px">
+    <div class="card"><h2>Sessões registadas</h2><div id="loglist"></div></div>
+    <div class="card">
+      <h2>Cópia de segurança</h2>
+      <p class="msg" style="margin:0">Tudo fica guardado neste iPhone. Para mudar de aparelho ou guardar uma cópia, copia o código e cola-o no outro aparelho em "Restaurar".</p>
+      <textarea id="bk" aria-label="Código de cópia de segurança"></textarea>
+      <div class="row"><button class="ghost" id="bk-copy" type="button">Copiar código</button><button class="ghost" id="bk-load" type="button">Restaurar a partir do código</button></div>
+      <div class="msg" id="bk-msg"></div>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" data-tab="hoje" aria-selected="true"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Hoje</button>
+  <button role="tab" data-tab="progresso" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Progresso</button>
+  <button role="tab" data-tab="plano" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>Plano</button>
+  <button role="tab" data-tab="registo" aria-selected="false"><svg viewBox="0 0 24 24"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="8.5"/></svg>Registo</button>
+</nav>
+
+<script>
+const P = {"bank": {"HPL": 1500, "POF": 2500, "COM": 1160, "AL": 1900, "MB": 715}, "rate": {"HPL": 70, "POF": 55, "COM": 70, "AL": 65, "MB": 25}, "names": {"HPL": "Human Performance", "POF": "Principles of Flight", "COM": "Communications", "AL": "Air Law", "MB": "Mass & Balance", "INS": "Flight Instruments", "AFS": "Airframe and Systems", "PC": "Power Control"}, "weeks": [{"t": "Semana 1 · 29 set – 4 out", "f": "Teste de Communication (1 out): começa pelo banco de COM", "days": [{"iso": "2026-09-29", "type": "aulas", "cls": "Aulas 18–21", "blocks": [{"s": "COM", "k": "q", "h": 1.75, "note": "", "q": 120}], "h": 1.75, "dow": "Ter"}, {"iso": "2026-09-30", "type": "aulas", "cls": "Aulas 18–21", "blocks": [{"s": "COM", "k": "q", "h": 1.75, "note": "", "q": 120}], "h": 1.75, "dow": "Qua"}, {"iso": "2026-10-01", "type": "teste", "cls": "TESTE Communication · 18–21", "blocks": [{"s": "COM", "k": "r", "h": 1.5, "note": "erradas, antes do teste", "q": 0}], "h": 1.5, "dow": "Qui"}, {"iso": "2026-10-02", "type": "aulas", "cls": "Inst – Flight Instruments (10/12)", "blocks": [{"s": "AL", "k": "q", "h": 1.75, "note": "", "q": 115}], "h": 1.75, "dow": "Sex"}, {"iso": "2026-10-03", "type": "livre", "cls": "Sem aulas", "blocks": [{"s": "INS", "k": "s", "h": 1.5, "note": "notas das aulas para o teste de 9 out", "q": 0}, {"s": "COM", "k": "q", "h": 4, "note": "", "q": 280}], "h": 5.5, "dow": "Sáb"}, {"iso": "2026-10-04", "type": "livre", "cls": "Sem aulas", "blocks": [{"s": "HPL", "k": "q", "h": 5.5, "note": "", "q": 385}], "h": 5.5, "dow": "Dom"}]}, {"t": "Semana 2 · 5 – 11 out", "f": "Feriado a 5; teste de Instrumentos (9); banco de COM fechado a 10", "days": [{"iso": "2026-10-05", "type": "feriado", "cls": "Feriado", "blocks": [{"s": "POF", "k": "q", "h": 3, "note": "", "q": 165}, {"s": "COM", "k": "q", "h": 2.5, "note": "", "q": 175}], "h": 5.5, "dow": "Seg"}, {"iso": "2026-10-06", "type": "aulas", "cls": "Communication (aula 14)", "blocks": [{"s": "COM", "k": "q", "h": 1.75, "note": "", "q": 120}], "h": 1.75, "dow": "Ter"}, {"iso": "2026-10-07", "type": "aulas", "cls": "Meteorology", "blocks": [{"s": "COM", "k": "q", "h": 1.75, "note": "", "q": 120}], "h": 1.75, "dow": "Qua"}, {"iso": "2026-10-08", "type": "aulas", "cls": "Inst – Flight Instruments (11/12)", "blocks": [{"s": "INS", "k": "s", "h": 1.75, "note": "perguntas + revisão final", "q": 0}], "h": 1.75, "dow": "Qui"}, {"iso": "2026-10-09", "type": "teste", "cls": "TESTE Flight Instruments · 18–21", "blocks": [{"s": "INS", "k": "s", "h": 1.5, "note": "revisão leve", "q": 0}], "h": 1.5, "dow": "Sex"}, {"iso": "2026-10-10", "type": "livre", "cls": "Sem aulas", "blocks": [{"s": "AFS", "k": "s", "h": 2, "note": "notas do módulo + perguntas", "q": 0}, {"s": "COM", "k": "q", "h": 3.25, "note": "termina o banco de COM", "q": 225}], "h": 5.25, "dow": "Sáb"}, {"iso": "2026-10-11", "type": "livre", "cls": "Sem aulas", "blocks": [{"s": "AFS", "k": "s", "h": 1.5, "note": "revisão final", "q": 0}, {"s": "POF", "k": "q", "h": 4, "note": "", "q": 220}], "h": 5.5, "dow": "Dom"}]}, {"t": "Semana 3 · 12 – 18 out", "f": "Airframe (12) e Power Control (16); fim de semana de Air Law", "days": [{"iso": "2026-10-12", "type": "teste", "cls": "TESTE Airframe and Systems · 18–21", "blocks": [{"s": "AFS", "k": "s", "h": 1.5, "note": "revisão leve", "q": 0}], "h": 1.5, "dow": "Seg"}, {"iso": "2026-10-13", "type": "aulas", "cls": "Performance", "blocks": [{"s": "HPL", "k": "q", "h": 1.75, "note": "", "q": 120}], "h": 1.75, "dow": "Ter"}, {"iso": "2026-10-14", "type": "aulas", "cls": "Inst – Power Control (1/3)", "blocks": [{"s": "HPL", "k": "q", "h": 1.75, "note": "", "q": 120}], "h": 1.75, "dow": "Qua"}, {"iso": "2026-10-15", "type": "aulas", "cls": "Inst – Power Control (2/3)", "blocks": [{"s": "PC", "k": "s", "h": 1.75, "note": "rever a aula 1", "q": 0}], "h": 1.75, "dow": "Qui"}, {"iso": "2026-10-16", "type": "teste", "cls": "TESTE Power Control (3/3) · 18–21", "blocks": [{"s": "PC", "k": "s", "h": 1.5, "note": "rever as aulas 1–2", "q": 0}], "h": 1.5, "dow": "Sex"}, {"iso": "2026-10-17", "type": "al", "cls": "Sem aulas", "blocks": [{"s": "AL", "k": "q", "h": 5.5, "note": "", "q": 360}], "h": 5.5, "dow": "Sáb"}, {"iso": "2026-10-18", "type": "al", "cls": "Sem aulas", "blocks": [{"s": "AL", "k": "q", "h": 3, "note": "", "q": 195}, {"s": "POF", "k": "q", "h": 2.5, "note": "", "q": 140}], "h": 5.5, "dow": "Dom"}]}, {"t": "Semana 4 · 19 – 25 out", "f": "Air Law quase todos os dias; POF e HPL ao fim de semana", "days": [{"iso": "2026-10-19", "type": "al", "cls": "Performance", "blocks": [{"s": "AL", "k": "q", "h": 1.75, "note": "", "q": 115}], "h": 1.75, "dow": "Seg"}, {"iso": "2026-10-20", "type": "al", "cls": "Performance", "blocks": [{"s": "AL", "k": "q", "h": 1.75, "note": "", "q": 115}], "h": 1.75, "dow": "Ter"}, {"iso": "2026-10-21", "type": "aulas", "cls": "General Navigation", "blocks": [{"s": "POF", "k": "q", "h": 1.75, "note": "", "q": 95}], "h": 1.75, "dow": "Qua"}, {"iso": "2026-10-22", "type": "al", "cls": "Meteorology", "blocks": [{"s": "AL", "k": "q", "h": 1.75, "note": "", "q": 115}], "h": 1.75, "dow": "Qui"}, {"iso": "2026-10-23", "type": "aulas", "cls": "Meteorology", "blocks": [{"s": "POF", "k": "q", "h": 1.75, "note": "", "q": 95}], "h": 1.75, "dow": "Sex"}, {"iso": "2026-10-24", "type": "livre", "cls": "Sem aulas", "blocks": [{"s": "AL", "k": "q", "h": 2.5, "note": "", "q": 160}, {"s": "HPL", "k": "q", "h": 1.5, "note": "", "q": 105}, {"s": "POF", "k": "q", "h": 1.5, "note": "", "q": 80}], "h": 5.5, "dow": "Sáb"}, {"iso": "2026-10-25", "type": "livre", "cls": "Sem aulas", "blocks": [{"s": "AL", "k": "q", "h": 2.5, "note": "", "q": 160}, {"s": "HPL", "k": "q", "h": 1.5, "note": "", "q": 105}, {"s": "POF", "k": "q", "h": 1.5, "note": "", "q": 80}], "h": 5.5, "dow": "Dom"}]}, {"t": "Semana 5 · 26 out – 1 nov", "f": "Avaliação formativa de Air Law (28); POF e AL ao fim de semana", "days": [{"iso": "2026-10-26", "type": "al", "cls": "Performance", "blocks": [{"s": "AL", "k": "q", "h": 1.75, "note": "", "q": 115}], "h": 1.75, "dow": "Seg"}, {"iso": "2026-10-27", "type": "al", "cls": "General Navigation", "blocks": [{"s": "AL", "k": "q", "h": 1.75, "note": "também serve de preparação para dia 28", "q": 115}], "h": 1.75, "dow": "Ter"}, {"iso": "2026-10-28", "type": "teste", "cls": "AVALIAÇÃO FORMATIVA Air Law (100 KSA) · 18–21", "blocks": [{"s": "AL", "k": "r", "h": 1.5, "note": "erradas + revisão leve", "q": 0}], "h": 1.5, "dow": "Qua"}, {"iso": "2026-10-29", "type": "aulas", "cls": "General Navigation", "blocks": [{"s": "POF", "k": "q", "h": 1.75, "note": "", "q": 95}], "h": 1.75, "dow": "Qui"}, {"iso": "2026-10-30", "type": "aulas", "cls": "100 KSA · 1st Summative Assessment · 18–21", "blocks": [{"s": "HPL", "k": "q", "h": 1.5, "note": "", "q": 105}], "h": 1.5, "dow": "Sex"}, {"iso": "2026-10-31", "type": "livre", "cls": "Sem aulas", "blocks": [{"s": "POF", "k": "q", "h": 4, "note": "", "q": 220}, {"s": "AL", "k": "q", "h": 1.5, "note": "", "q": 100}], "h": 5.5, "dow": "Sáb"}, {"iso": "2026-11-01", "type": "livre", "cls": "Sem aulas", "blocks": [{"s": "POF", "k": "q", "h": 3, "note": "", "q": 165}, {"s": "AL", "k": "q", "h": 2.5, "note": "", "q": 160}], "h": 5.5, "dow": "Dom"}]}, {"t": "Semana 6 · 2 – 8 nov (dispensa)", "f": "Fecha os bancos de AL, HPL e POF; simulações; decisão do Joker no domingo", "days": [{"iso": "2026-11-02", "type": "dispensa", "cls": "Dispensa", "blocks": [{"s": "POF", "k": "q", "h": 3.5, "note": "", "q": 190}, {"s": "HPL", "k": "q", "h": 2.5, "note": "", "q": 175}], "h": 6.0, "dow": "Seg"}, {"iso": "2026-11-03", "type": "dispensa", "cls": "Dispensa", "blocks": [{"s": "POF", "k": "q", "h": 3.5, "note": "", "q": 190}, {"s": "HPL", "k": "q", "h": 2.5, "note": "", "q": 175}], "h": 6.0, "dow": "Ter"}, {"iso": "2026-11-04", "type": "dispensa", "cls": "Dispensa", "blocks": [{"s": "POF", "k": "q", "h": 3, "note": "", "q": 165}, {"s": "HPL", "k": "q", "h": 3.0, "note": "termina o banco de HPL", "q": 210}], "h": 6.0, "dow": "Qua"}, {"iso": "2026-11-05", "type": "dispensa", "cls": "Dispensa", "blocks": [{"s": "POF", "k": "q", "h": 3.5, "note": "", "q": 190}, {"s": "AL", "k": "q", "h": 1.25, "note": "termina o banco de AL", "q": 75}, {"s": "AL", "k": "r", "h": 1.25, "note": "erradas", "q": 0}], "h": 6.0, "dow": "Qui"}, {"iso": "2026-11-06", "type": "dispensa", "cls": "Dispensa", "blocks": [{"s": "POF", "k": "q", "h": 3.5, "note": "", "q": 190}, {"s": "HPL", "k": "r", "h": 2.5, "note": "simulação completa + erradas", "q": 0}], "h": 6.0, "dow": "Sex"}, {"iso": "2026-11-07", "type": "dispensa", "cls": "Sem aulas", "blocks": [{"s": "POF", "k": "q", "h": 4.0, "note": "termina o banco de POF", "q": 220}, {"s": "COM", "k": "r", "h": 1.5, "note": "simulação completa", "q": 0}], "h": 5.5, "dow": "Sáb"}, {"iso": "2026-11-08", "type": "dispensa", "cls": "Sem aulas", "blocks": [{"s": "HPL", "k": "r", "h": 3, "note": "erradas + revisão final leve", "q": 0}, {"s": "COM", "k": "r", "h": 1, "note": "erradas", "q": 0}, {"s": "AL", "k": "r", "h": 1.5, "note": "erradas · às 21h: decisão final do Joker", "q": 0}], "h": 5.5, "dow": "Dom"}]}, {"t": "Semana 7 · 9 – 11 nov (exames)", "f": "HPL seg · POF ter · COM, AL e M&B qua", "days": [{"iso": "2026-11-09", "type": "exame", "cls": "EXAME Human Performance · 09:00–10:30", "blocks": [{"s": "POF", "k": "r", "h": 4, "note": "à tarde: simulação completa + erradas", "q": 0}], "h": 4, "dow": "Seg"}, {"iso": "2026-11-10", "type": "exame", "cls": "EXAME Principles of Flight · 15:45–17:15", "blocks": [{"s": "POF", "k": "r", "h": 2, "note": "manhã: revisão leve", "q": 0}, {"s": "COM", "k": "r", "h": 1, "note": "à noite: erradas", "q": 0}, {"s": "AL", "k": "r", "h": 1.5, "note": "à noite: simulação curta", "q": 0}], "h": 4.5, "dow": "Ter"}, {"iso": "2026-11-11", "type": "exame", "cls": "EXAMES Communications 09:00 · Air Law 14:00 · M&B 15:15 (se Joker)", "blocks": [{"s": "COM", "k": "r", "h": 0.5, "note": "antes das 9h: frases e abreviaturas", "q": 0}, {"s": "AL", "k": "r", "h": 1.5, "note": "entre exames: números-chave", "q": 0}], "h": 2.0, "dow": "Qua"}]}]};
+const CORE = ["HPL","POF","COM","AL"], ALL = ["HPL","POF","COM","AL","MB"];
+const EXAMS = [
+  {s:"HPL", iso:"2026-11-09", t:"09:00"}, {s:"POF", iso:"2026-11-10", t:"15:45"},
+  {s:"COM", iso:"2026-11-11", t:"09:00"}, {s:"AL", iso:"2026-11-11", t:"14:00"}, {s:"MB", iso:"2026-11-11", t:"15:15"},
+];
+const DECISION = new Date("2026-11-08T21:00:00");
+const K = "plano-atpl-v1";
+const DAYS = P.weeks.flatMap(w => w.days);
+DAYS.forEach(d => d.blocks.forEach((b,i) => b.id = d.iso + "-" + i));
+
+let S = {done:[], log:[]};
+function load(){ try{ const x = JSON.parse(localStorage.getItem(K) || "null"); if(x && Array.isArray(x.done) && Array.isArray(x.log)) S = x; }catch(e){} }
+function save(){ try{ localStorage.setItem(K, JSON.stringify(S)); return true; }catch(e){ return false; } }
+
+function isoOf(d){ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
+const NOW = new Date(), TODAY = isoOf(NOW);
+const fmtN = x => Math.round(x).toLocaleString("pt-PT");
+const hfmt = h => { const neg = h < 0; h = Math.abs(h); const H = Math.floor(h + 1e-9), m = Math.round((h - H) * 60); const s = m === 60 ? (H+1)+"h" : m ? H+"h"+String(m).padStart(2,"0") : H+"h"; return (neg ? "−" : "") + s; };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const chip = s => `<span class="subj" style="background:var(${["INS","AFS","PC"].includes(s) ? "--c-sch" : "--c-"+s})">${s === "MB" ? "M&amp;B" : s}</span>`;
+
+// ---------- métricas ----------
+function planned(s, beforeIso){ let t = 0; DAYS.forEach(d => { if(d.iso < beforeIso) d.blocks.forEach(b => { if(b.s === s && b.k === "q") t += b.q; }); }); return t; }
+function plannedAll(s){ return planned(s, "9999"); }
+function newDone(s){ return S.log.filter(l => l.s === s && l.kind === "new").reduce((a,l) => a + l.n, 0); }
+function answered(s){ return S.log.filter(l => l.s === s).reduce((a,l) => a + l.n, 0); }
+function accLast(s, N){
+  let n = 0, c = 0; const L = S.log.filter(l => l.s === s).slice().sort((a,b) => b.ts - a.ts);
+  for(const l of L){ if(n >= N) break; n += l.n; c += l.c; }
+  return n ? {p: c / n * 100, n} : null;
+}
+function pace(s){
+  const L = S.log.filter(l => l.s === s && l.min > 0 && l.kind === "new");
+  const n = L.reduce((a,l) => a + l.n, 0), m = L.reduce((a,l) => a + l.min, 0);
+  return (n >= 40 && m > 0) ? {v: n / (m / 60), real: true} : {v: P.rate[s], real: false};
+}
+function subjState(s){
+  const bank = P.bank[s], nd = Math.min(newDone(s), bank), plan = planned(s, TODAY), pc = pace(s);
+  const delta = nd - plan;
+  return {s, bank, nd, plan, delta, pace: pc, deltaH: delta / pc.v, acc200: accLast(s, s === "MB" ? 150 : 200), cov: nd / bank * 100};
+}
+
+function joker(){
+  const st = Object.fromEntries(ALL.map(s => [s, subjState(s)]));
+  const started = s => plannedAll(s) > 0 && planned(s, TODAY) > 0;
+  const act = [];
+  const lagging = CORE.filter(s => st[s].delta < 0);
+  act.push({ok: lagging.length === 0, t: lagging.length ? "Em dia nas 4 cadeiras — atrasado em: " + lagging.map(s => `${s} (${fmtN(-st[s].delta)} perg.)`).join(", ") : "Em dia nas 4 cadeiras"});
+  const lowAcc = CORE.filter(s => started(s) && (!st[s].acc200 || st[s].acc200.p < 75));
+  act.push({ok: lowAcc.length === 0, t: lowAcc.length ? "Acerto ≥ 75% nas últimas 200 — abaixo ou sem registo: " + lowAcc.join(", ") : "Acerto ≥ 75% nas últimas 200 de cada cadeira já começada"});
+  const adv = CORE.reduce((a,s) => a + st[s].deltaH, 0);
+  act.push({ok: adv >= 3, t: `Avanço acumulado ≥ 3h — tens ${hfmt(adv)}`});
+  const active = act.every(x => x.ok);
+
+  const fin = [];
+  const mb = st.MB;
+  fin.push({ok: mb.nd >= 645, t: `M&B: ≥ 645 perguntas novas (90%) — tens ${fmtN(mb.nd)}`});
+  fin.push({ok: !!mb.acc200 && mb.acc200.p >= 80, t: `M&B: ≥ 80% nas últimas 150 — ${mb.acc200 ? Math.round(mb.acc200.p) + "%" : "sem registo"}`});
+  CORE.forEach(s => {
+    const x = st[s];
+    fin.push({ok: x.cov >= 95 && !!x.acc200 && x.acc200.p >= 80, t: `${s}: ≥ 95% do banco e ≥ 80% nas últimas 200 — ${Math.round(x.cov)}% · ${x.acc200 ? Math.round(x.acc200.p) + "%" : "sem registo"}`});
+  });
+  const go = fin.every(x => x.ok);
+  const mbNeedH = Math.max(0, 645 - mb.nd) / pace("MB").v;
+  const mbJokerLeft = DAYS.filter(d => d.iso >= TODAY).flatMap(d => d.blocks).filter(b => b.k === "j").reduce((a,b) => a + b.h, 0);
+  const feasibleH = Math.max(0, adv) + mbJokerLeft;
+  return {st, act, active, adv, fin, go, mbNeedH, feasibleH, final: NOW >= DECISION};
+}
+
+// ---------- render ----------
+function renderCountdown(){
+  const t0 = new Date(TODAY + "T12:00:00");
+  const next = EXAMS.filter(e => e.s !== "MB" && e.iso >= TODAY);
+  const items = [["HPL","2026-11-09","seg 09:00"],["POF","2026-11-10","ter 15:45"],["COM · AL","2026-11-11","qua 09:00 · 14:00"]];
+  document.getElementById("countdown").innerHTML = items.map(([l,iso,s]) => {
+    const n = Math.round((new Date(iso + "T12:00:00") - t0) / 864e5);
+    return `<div class="tile"><span class="k">${l}</span><span class="v" style="color:var(--danger)">${n > 0 ? n + " d" : n === 0 ? "Hoje" : "Feito"}</span><span class="s">${s}</span></div>`;
+  }).join("");
+}
+
+function blockText(b){
+  const nm = P.names[b.s] || b.s;
+  if(b.k === "q") return `${chip(b.s)} <b>${fmtN(b.q)}</b> perguntas novas${b.note ? `<small>${esc(b.note)}</small>` : ""}`;
+  if(b.k === "r") return `${chip(b.s)} Rever: ${esc(b.note || "erradas")}`;
+  if(b.k === "s") return `${chip(b.s)} Teste da escola (${esc(nm)}): ${esc(b.note)}`;
+  return `${chip("MB")} <b>Joker:</b> ${fmtN(b.q)} perguntas<small>${esc(b.note)}</small>`;
+}
+function blockRow(b){
+  const d = S.done.includes(b.id);
+  return `<label class="block ${d ? "done" : ""} ${b.k === "j" ? "j" : ""}"><input type="checkbox" class="check" data-id="${b.id}" ${d ? "checked" : ""} aria-label="Marcar bloco como feito"><span class="t">${blockText(b)}</span><span class="h">${hfmt(b.h)}</span></label>`;
+}
+
+function renderToday(){
+  const DOWL = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+  document.getElementById("today-label").textContent = DOWL[NOW.getDay()] + ", " + NOW.toLocaleDateString("pt-PT", {day:"numeric", month:"long"});
+  let d = DAYS.find(x => x.iso === TODAY), title = "Hoje";
+  if(!d){ d = DAYS.find(x => x.iso > TODAY); title = d ? "Próximo dia do plano · " + d.dow + " " + d.iso.slice(8,10) + "/" + d.iso.slice(5,7) : ""; }
+  document.getElementById("today-title").textContent = d ? title : "Plano concluído";
+  document.getElementById("today-hours").textContent = d ? hfmt(d.h) : "";
+  const el = document.getElementById("today-blocks");
+  if(!d){ el.innerHTML = `<p class="msg">Todos os exames já passaram.</p>`; return; }
+  el.innerHTML = `<div class="msg" style="margin-bottom:4px">${esc(d.cls)}</div>` + d.blocks.map(blockRow).join("");
+}
+
+function renderJoker(){
+  const J = joker();
+  let pill, line;
+  if(J.final){ pill = J.go ? `<span class="pill ok">Decisão: faz M&amp;B</span>` : `<span class="pill bad">Decisão: não faças M&amp;B</span>`; line = J.go ? "Todos os critérios cumpridos. Mantém o exame de M&B a 11/11 às 15:15." : "Nem todos os critérios foram cumpridos. Os blocos Joker passam para as erradas de POF, COM e AL."; }
+  else if(J.active){ pill = `<span class="pill joker">Joker ativo</span>`; line = `Tens ${hfmt(J.adv)} de avanço. Usa-o em M&amp;B. Faltam cerca de ${hfmt(J.mbNeedH)} de M&amp;B para chegar a 645 perguntas.`; }
+  else { pill = `<span class="pill warn">Joker desligado</span>`; line = "Por agora, foca-te nas 4 cadeiras. O Joker liga-se sozinho quando os critérios se cumprirem."; }
+  const feasible = J.feasibleH >= J.mbNeedH;
+  const proj = J.final ? "" : `<div class="stats"><span>Avanço: <b>${hfmt(J.adv)}</b></span><span>M&amp;B em falta: <b>${hfmt(J.mbNeedH)}</b></span><span>Tempo disponível p/ M&amp;B: <b>${hfmt(J.feasibleH)}</b></span><span>${feasible ? "Neste ritmo, <b>chega</b>" : "Neste ritmo, <b>não chega</b>"}</span></div>`;
+  document.getElementById("joker-mini").innerHTML = `<div class="row" style="justify-content:space-between"><h2>Joker · Mass &amp; Balance</h2>${pill}</div><p style="margin:0;font-size:14px">${line}</p>${proj}`;
+  const li = arr => arr.map(x => `<li class="${x.ok ? "y" : "n"}">${esc(x.t)}</li>`).join("");
+  document.getElementById("joker-full").innerHTML = `<div class="row" style="justify-content:space-between"><h2>Joker · Mass &amp; Balance</h2>${pill}</div>
+    <p style="margin:0;font-size:14px">${line}</p>${proj}
+    <h3 style="font-size:15px;margin-top:6px">1. Ativar o Joker</h3><ul class="crit">${li(J.act)}</ul>
+    <h3 style="font-size:15px;margin-top:6px">2. Decisão final · dom 8 nov, 21h</h3><ul class="crit">${li(J.fin)}</ul>
+    <p class="msg" style="margin:0">Confirma com a escola até quando podes inscrever-te ou desistir do exame de M&amp;B.</p>`;
+}
+
+function renderSubjects(){
+  document.getElementById("subjects").innerHTML = ALL.map(s => {
+    const x = subjState(s);
+    const plan = s === "MB" ? 0 : x.plan;
+    const status = s === "MB" ? `<span class="pill joker">Joker</span>` : x.delta >= 0 ? `<span class="pill ok">+${fmtN(x.delta)} · em dia</span>` : `<span class="pill bad">${fmtN(x.delta)} · atrasado</span>`;
+    const accTxt = x.acc200 ? `<b style="color:${x.acc200.p >= 80 ? "var(--ok)" : x.acc200.p >= 75 ? "var(--warn)" : "var(--danger)"}">${Math.round(x.acc200.p)}%</b>` : "<b>—</b>";
+    const leftH = (x.bank - x.nd) / x.pace.v;
+    return `<div class="subjrow"><div class="top"><span>${chip(s)} <b>${esc(P.names[s])}</b></span>${status}</div>
+      <div class="track"><div class="fill" style="width:${Math.min(100, x.cov)}%;background:var(--c-${s})"></div>${plan ? `<div class="mark" style="left:${Math.min(100, plan / x.bank * 100)}%"></div>` : ""}</div>
+      <div class="stats"><span>Novas: <b>${fmtN(x.nd)}</b> / ${fmtN(x.bank)}</span>${s !== "MB" ? `<span>Meta até ontem: <b>${fmtN(plan)}</b></span>` : ""}<span>Acerto últimas ${s === "MB" ? 150 : 200}: ${accTxt}</span><span>Ritmo: <b>${Math.round(x.pace.v)}/h</b>${x.pace.real ? "" : " (planeado)"}</span><span>Falta: <b>${hfmt(leftH)}</b></span></div></div>`;
+  }).join("");
+}
+
+function renderPlan(){
+  document.getElementById("plan").innerHTML = P.weeks.map(w => `<div class="week-h"><h2 style="font-size:17px">${esc(w.t)}</h2><span>${esc(w.f)}</span></div>` +
+    w.days.map(d => `<article class="day t-${d.type} ${d.iso === TODAY ? "today" : ""}" id="d-${d.iso}"><div class="d"><b>${d.dow}</b><span>${d.iso.slice(8,10)}/${d.iso.slice(5,7)}</span><span>${hfmt(d.h)}</span></div><div class="b"><div class="cls">${esc(d.cls)}</div>${d.blocks.map(blockRow).join("")}</div></article>`).join("")).join("");
+}
+
+function renderLog(){
+  const L = S.log.slice().sort((a,b) => b.ts - a.ts);
+  document.getElementById("loglist").innerHTML = L.length ? L.map(l => `<div class="logitem"><span>${chip(l.s)} ${l.iso.slice(8,10)}/${l.iso.slice(5,7)} · ${l.kind === "new" ? "novas" : "revisão"} · <b>${l.n}</b> perg. · ${l.n ? Math.round(l.c / l.n * 100) : 0}%${l.min ? " · " + l.min + " min" : ""}</span><button class="ghost" data-del="${l.ts}" type="button">Apagar</button></div>`).join("") : `<p class="msg">Ainda não registaste sessões. Faz o registo no separador Hoje.</p>`;
+}
+
+function renderAll(){ renderCountdown(); renderToday(); renderJoker(); renderSubjects(); renderPlan(); renderLog(); }
+
+// ---------- eventos ----------
+let fSubj = null, fKind = "new";
+(function setupForm(){
+  const today = DAYS.find(x => x.iso === TODAY);
+  const guess = today && today.blocks.find(b => ALL.includes(b.s));
+  fSubj = guess ? guess.s : "HPL";
+  const seg = document.getElementById("seg-subj");
+  seg.innerHTML = ALL.map(s => `<button type="button" data-s="${s}" aria-pressed="${s === fSubj}">${s === "MB" ? "M&amp;B" : s}</button>`).join("");
+  seg.addEventListener("click", e => { const b = e.target.closest("button"); if(!b) return; fSubj = b.dataset.s; seg.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
+  const sk = document.getElementById("seg-kind");
+  sk.addEventListener("click", e => { const b = e.target.closest("button"); if(!b) return; fKind = b.dataset.k; sk.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x === b))); });
+  document.getElementById("logform").addEventListener("submit", e => {
+    e.preventDefault();
+    const n = parseInt(document.getElementById("f-n").value, 10), c = parseInt(document.getElementById("f-c").value, 10), m = parseInt(document.getElementById("f-m").value || "0", 10);
+    const msg = document.getElementById("logmsg");
+    if(!(n > 0)) { msg.textContent = "Escreve quantas perguntas fizeste."; return; }
+    if(!(c >= 0) || c > n) { msg.textContent = "As certas têm de estar entre 0 e " + n + "."; return; }
+    S.log.push({ts: Date.now(), iso: TODAY, s: fSubj, kind: fKind, n, c, min: m > 0 ? m : 0});
+    const ok = save();
+    ["f-n","f-c","f-m"].forEach(id => document.getElementById(id).value = "");
+    msg.textContent = ok ? `Guardado: ${fSubj} · ${n} perguntas · ${Math.round(c / n * 100)}%.` : "Não foi possível guardar neste aparelho.";
+    renderAll();
+  });
+})();
+
+document.addEventListener("change", e => {
+  const c = e.target.closest(".check"); if(!c) return;
+  const id = c.dataset.id;
+  S.done = S.done.filter(x => x !== id); if(c.checked) S.done.push(id);
+  save(); renderToday(); renderPlan();
+});
+
+let pendingDel = null;
+document.getElementById("loglist").addEventListener("click", e => {
+  const b = e.target.closest("[data-del]"); if(!b) return;
+  if(pendingDel !== b.dataset.del){ pendingDel = b.dataset.del; b.textContent = "Confirmar"; b.style.color = "var(--danger)"; return; }
+  S.log = S.log.filter(l => String(l.ts) !== pendingDel); pendingDel = null; save(); renderAll();
+});
+
+document.querySelectorAll("nav.tabs button").forEach(t => t.addEventListener("click", () => {
+  document.querySelectorAll("nav.tabs button").forEach(x => x.setAttribute("aria-selected", String(x === t)));
+  document.querySelectorAll(".tab").forEach(s => s.hidden = s.id !== "tab-" + t.dataset.tab);
+  window.scrollTo(0, 0);
+}));
+document.getElementById("gotoday").addEventListener("click", () => {
+  const target = DAYS.map(d => d.iso).find(i => i >= TODAY) || DAYS[DAYS.length - 1].iso;
+  const el = document.getElementById("d-" + target); if(el) el.scrollIntoView({block: "center"});
+});
+
+const bk = document.getElementById("bk"), bkMsg = document.getElementById("bk-msg");
+document.getElementById("bk-copy").addEventListener("click", () => {
+  bk.value = JSON.stringify(S);
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(bk.value).then(() => bkMsg.textContent = "Código copiado.", () => { bk.select(); bkMsg.textContent = "Seleciona o texto e copia-o."; });
+  else { bk.select(); bkMsg.textContent = "Seleciona o texto e copia-o."; }
+});
+document.getElementById("bk-load").addEventListener("click", () => {
+  try{ const x = JSON.parse(bk.value.trim()); if(!x || !Array.isArray(x.done) || !Array.isArray(x.log)) throw 0; S = x; save(); renderAll(); bkMsg.textContent = `Restaurado: ${S.log.length} sessões.`; }
+  catch(e){ bkMsg.textContent = "O código não é válido. Cola o código completo, desde { até }."; }
+});
+
+load(); renderAll();
+if("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+</script>
+</body>
+</html>
